@@ -2,7 +2,7 @@ package co.edu.uco.ucoparking.negocio.dominio;
 
 import java.util.UUID;
 
-import co.edu.uco.ucoparking.transversal.UtilTexto;
+import co.edu.uco.ucoparking.transversal.utilitario.UtilTexto;
 
 public class PaisDominio {
 	

@@ -2,7 +2,8 @@ package co.edu.uco.ucoparking.dto;
 
 import java.util.UUID;
 
-import co.edu.uco.ucoparking.transversal.UtilTexto;
+
+import co.edu.uco.ucoparking.transversal.utilitario.UtilTexto;
 
 public class PaisDTO {
 	

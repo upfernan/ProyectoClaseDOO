@@ -1,4 +1,4 @@
-package co.edu.uco.ucoparking.transversal;
+package co.edu.uco.ucoparking.transversal.utilitario;
 
 public final class UtilTexto {
 	
