@@ -8,6 +8,8 @@ import co.edu.uco.ucoparking.entidad.PaisEntidad;
 import co.edu.uco.ucoparking.negocio.casouso.pais.RegistrarNuevoPaisCasoUso;
 import co.edu.uco.ucoparking.negocio.dominio.PaisDominio;
 import co.edu.uco.ucoparking.transversal.utilitario.UtilObjeto;
+import co.edu.uco.ucoparking.transversal.utilitario.UtilTexto;
+import co.edu.uco.ucoparking.transversal.utilitario.excepcion.UcoParkingExcepcion;
 
 public class RegistrarNuevoPaisCasoUsoImpl implements RegistrarNuevoPaisCasoUso {
 	
@@ -24,22 +26,30 @@ public class RegistrarNuevoPaisCasoUsoImpl implements RegistrarNuevoPaisCasoUso 
 		guardarNuevoPais(datos);
 		
 	}
-	//1. Validacion de datos consistentes: Tip ode dato, longitud, formato, obligatoriedad y rango.
-	private void validarIntegridadDatosPais(PaisDominio pais) {
-		// validar tipo de dato, longitud, formato, obligatoriedad y rango
-		// si no se cumple lanzar una excepcion customizada 
-		// datos invalidos excepcion
+	//1. Validacion de datos consistentes: tipo de dato, longitud, formato, obligatoriedad y rango.
+	private void validarIntegridadDatosPais(final PaisDominio pais) {
+		if (UtilObjeto.esNulo(pais)) {
+			throw new UcoParkingExcepcion("Los datos del país son obligatorios");
+		}
+		if (UtilTexto.esNula(pais.getNombre()) || pais.getNombre().trim().isEmpty()) {
+			throw new UcoParkingExcepcion("El nombre del país es obligatorio");
+		}
+		if (pais.getNombre().trim().length() < 3 || pais.getNombre().trim().length() > 100) {
+			throw new UcoParkingExcepcion("El nombre del país debe tener entre 3 y 100 caracteres");
+		}
+		if (!pais.getNombre().matches("[\\p{L} ]+")) {
+			throw new UcoParkingExcepcion("El nombre del país solo puede contener letras y espacios");
+		}
 	}
 //2. No debe esxistir otro pais con el mismo nombre 
-	private void validarNoExistaOtroPaisConMismoNombre(String nombre) {
+	private void validarNoExistaOtroPaisConMismoNombre(final String nombre) {
 		var paisEntidadFiltro = new PaisEntidad.Builder().nombre(nombre).build();
 		var resultados = daoFactory.getPaisDAO().consultarPorFiltro(paisEntidadFiltro);
 		
-		if(UtilObjeto.esNulo(resultados) && resultados.isEmpty()) {
+		if(UtilObjeto.esNulo(resultados) || resultados.isEmpty()) {
 			return; // No existe otro pais con el mismo nombre, se puede continuar
 		}
-		// si no se cumple lanzar una excepcion customizada 
-		//existe pais con mismo nombreexcepcion
+		throw new UcoParkingExcepcion("Ya existe un país registrado con el nombre: " + nombre);
 	}
 	//3. No debe existir otro pais con el mismo ID 
 	private UUID generarIdUnicoNuevoPais() {
@@ -53,7 +63,10 @@ public class RegistrarNuevoPaisCasoUsoImpl implements RegistrarNuevoPaisCasoUso 
 
 		var idNuevoPais = generarIdUnicoNuevoPais();
 
-		PaisEntidad paisEntidad = null;
+		PaisEntidad paisEntidad = new PaisEntidad.Builder()
+				.id(idNuevoPais)
+				.nombre(pais.getNombre())
+				.build();
 		daoFactory.getPaisDAO().crear(paisEntidad);
 
 	}

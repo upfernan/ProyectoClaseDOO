@@ -2,33 +2,28 @@ package co.edu.uco.ucoparking.negocio.fachada.pais.impl;
 
 import co.edu.uco.ucoparking.datos.dao.sql.factoria.DAOFactory;
 import co.edu.uco.ucoparking.dto.PaisDTO;
-import co.edu.uco.ucoparking.negocio.casouso.pais.RegistrarNuevoPaisCasoUso;
-import co.edu.uco.ucoparking.negocio.casouso.pais.impl.RegistrarNuevoPaisCasoUsoImpl;
-import co.edu.uco.ucoparking.negocio.dominio.PaisDominio;
-import co.edu.uco.ucoparking.negocio.fachada.pais.RegistrarNuevoPaisFachada;
+import co.edu.uco.ucoparking.negocio.casouso.pais.EliminarPaisCasoUso;
+import co.edu.uco.ucoparking.negocio.casouso.pais.impl.EliminarPaisCasoUsoImpl;
+import co.edu.uco.ucoparking.negocio.fachada.pais.EliminarPaisFachada;
 import co.edu.uco.ucoparking.transversal.utilitario.excepcion.UcoParkingExcepcion;
 
-public class RegistrarNuevoPaisFachadaImpl implements RegistrarNuevoPaisFachada {
+public class EliminarPaisFachadaImpl implements EliminarPaisFachada {
 
 	private DAOFactory daoFactory;
-	private RegistrarNuevoPaisCasoUso casoUso;
+	private EliminarPaisCasoUso casoUso;
 
-	public RegistrarNuevoPaisFachadaImpl() {
+	public EliminarPaisFachadaImpl() {
 		daoFactory = DAOFactory.getFactory();
-		casoUso = new RegistrarNuevoPaisCasoUsoImpl(daoFactory);
+		casoUso = new EliminarPaisCasoUsoImpl(daoFactory);
 	}
 
 	@Override
-	public void ejecutar(PaisDTO datos) {
+	public void ejecutar(final PaisDTO datos) {
 		try {
 
 			daoFactory.iniciarTransaccion();
 
-			PaisDominio dominio = new PaisDominio.Builder()
-						.id(datos.getId())
-						.nombre(datos.getNombre())
-						.build();
-			casoUso.ejecutar(dominio);
+			casoUso.ejecutar(datos.getId());
 
 			daoFactory.confirmarTransaccion();
 
@@ -40,8 +35,8 @@ public class RegistrarNuevoPaisFachadaImpl implements RegistrarNuevoPaisFachada 
 		} catch (Exception exception) {
 
 			daoFactory.cancelarTransaccion();
-			// Cuidado: No se puede botar la excepcion raiz ( root exception )
 			throw new UcoParkingExcepcion();
+
 		} finally {
 
 			daoFactory.cerrarConexion();
@@ -52,12 +47,13 @@ public class RegistrarNuevoPaisFachadaImpl implements RegistrarNuevoPaisFachada 
 	public static void main(String[] args) {
 
 		try {
-			var pais = new PaisDTO.Builder().nombre("Colombia").build();
+			// Reemplaza este UUID por uno existente en tu BD
+			var id = java.util.UUID.fromString("9B4F05FA-229F-43DF-AFB2-2A7A52B1704C");
+			var pais = new PaisDTO.Builder().id(id).build();
 
-			RegistrarNuevoPaisFachada fachada = new RegistrarNuevoPaisFachadaImpl();
-
+			EliminarPaisFachada fachada = new EliminarPaisFachadaImpl();
 			fachada.ejecutar(pais);
-			
+
 			System.out.println("Soy un mago. Todo funcionó.");
 		} catch (Exception e) {
 			System.err.println("No funcionó. A revisar!!!!!");
@@ -67,5 +63,3 @@ public class RegistrarNuevoPaisFachadaImpl implements RegistrarNuevoPaisFachada 
 	}
 
 }
-
-
