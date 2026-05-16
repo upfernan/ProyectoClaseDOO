@@ -44,23 +44,6 @@ public class ConsultarPaisPorIdFachadaImpl implements ConsultarPaisPorIdFachada 
 		}
 	}
 
-	public static void main(String[] args) {
-
-		try {
-			// Reemplaza este UUID por uno existente en tu BD
-			var id = java.util.UUID.fromString("9B4F05FA-229F-43DF-AFB2-2A7A52B1704C");
-			var filtro = new PaisDTO.Builder().id(id).build();
-
-			ConsultarPaisPorIdFachada fachada = new ConsultarPaisPorIdFachadaImpl();
-			PaisDTO resultado = fachada.ejecutar(filtro);
-
-			System.out.println("Soy un mago. Todo funcionó.");
-			System.out.println("País encontrado: " + resultado.getNombre());
-		} catch (Exception e) {
-			System.err.println("No funcionó. A revisar!!!!!");
-			e.printStackTrace();
-		}
 
 	}
 
-}

@@ -53,8 +53,23 @@ public class RegistrarNuevoPaisCasoUsoImpl implements RegistrarNuevoPaisCasoUso 
 	}
 	//3. No debe existir otro pais con el mismo ID 
 	private UUID generarIdUnicoNuevoPais() {
-		// Aqui la logica para garantizar que se geenre un id que no existe 
-		return UUID.randomUUID();
+
+	    UUID nuevoId;
+	    boolean existe;
+
+	    do {
+
+	        nuevoId = UUID.randomUUID();
+
+	        var filtro = new PaisEntidad.Builder()
+	                .id(nuevoId)
+	                .build();
+	        var resultados = daoFactory
+	                .getPaisDAO()
+	                .consultarPorFiltro(filtro);
+	        existe = resultados != null && !resultados.isEmpty();
+	    } while (existe);
+	    return nuevoId;
 	}
 	
 //4. Guardar informacion del neuvo pais 

@@ -44,22 +44,6 @@ public class EliminarPaisFachadaImpl implements EliminarPaisFachada {
 		}
 	}
 
-	public static void main(String[] args) {
-
-		try {
-			// Reemplaza este UUID por uno existente en tu BD
-			var id = java.util.UUID.fromString("9B4F05FA-229F-43DF-AFB2-2A7A52B1704C");
-			var pais = new PaisDTO.Builder().id(id).build();
-
-			EliminarPaisFachada fachada = new EliminarPaisFachadaImpl();
-			fachada.ejecutar(pais);
-
-			System.out.println("Soy un mago. Todo funcionó.");
-		} catch (Exception e) {
-			System.err.println("No funcionó. A revisar!!!!!");
-			e.printStackTrace();
-		}
-
-	}
+	
 
 }

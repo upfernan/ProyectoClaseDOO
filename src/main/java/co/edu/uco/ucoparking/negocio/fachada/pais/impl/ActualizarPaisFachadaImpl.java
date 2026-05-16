@@ -49,22 +49,7 @@ public class ActualizarPaisFachadaImpl implements ActualizarPaisFachada {
 		}
 	}
 
-	public static void main(String[] args) {
 
-		try {
-			// Reemplaza este UUID por uno existente en tu BD
-			var id = java.util.UUID.fromString("REEMPLAZA-ESTE-UUID");
-			var pais = new PaisDTO.Builder().id(id).nombre("Colombia Actualizada").build();
-
-			ActualizarPaisFachada fachada = new ActualizarPaisFachadaImpl();
-			fachada.ejecutar(pais);
-
-			System.out.println("Soy un mago. Todo funcionó.");
-		} catch (Exception e) {
-			System.err.println("No funcionó. A revisar!!!!!");
-			e.printStackTrace();
-		}
 
 	}
 
-}
