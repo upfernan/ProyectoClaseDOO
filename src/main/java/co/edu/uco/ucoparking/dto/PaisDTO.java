@@ -2,8 +2,8 @@ package co.edu.uco.ucoparking.dto;
 
 import java.util.UUID;
 
-
 import co.edu.uco.ucoparking.transversal.utilitario.UtilTexto;
+import co.edu.uco.ucoparking.transversal.utilitario.UtilUUID;
 
 public class PaisDTO {
 	
@@ -11,8 +11,8 @@ public class PaisDTO {
 	private String nombre;
 	
 	public PaisDTO() {
-		setId(UUID.fromString("00000000-0000-0000-0000-000000000000"));
-		setNombre(nombre);// inicializar para que no sea con valores nulos 
+		setId(UtilUUID.UUID_DEFECTO);
+		setNombre(nombre);
 
 	}
 	

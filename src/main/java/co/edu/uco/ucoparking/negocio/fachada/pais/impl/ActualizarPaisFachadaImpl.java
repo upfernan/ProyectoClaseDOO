@@ -1,5 +1,8 @@
 package co.edu.uco.ucoparking.negocio.fachada.pais.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import co.edu.uco.ucoparking.datos.dao.sql.factoria.DAOFactory;
 import co.edu.uco.ucoparking.dto.PaisDTO;
 import co.edu.uco.ucoparking.negocio.casouso.pais.ActualizarPaisCasoUso;
@@ -9,6 +12,8 @@ import co.edu.uco.ucoparking.negocio.fachada.pais.ActualizarPaisFachada;
 import co.edu.uco.ucoparking.transversal.utilitario.excepcion.UcoParkingExcepcion;
 
 public class ActualizarPaisFachadaImpl implements ActualizarPaisFachada {
+
+	private static final Logger logger = LoggerFactory.getLogger(ActualizarPaisFachadaImpl.class);
 
 	private DAOFactory daoFactory;
 	private ActualizarPaisCasoUso casoUso;
@@ -21,35 +26,28 @@ public class ActualizarPaisFachadaImpl implements ActualizarPaisFachada {
 	@Override
 	public void ejecutar(final PaisDTO datos) {
 		try {
-
+			logger.debug("Entre al metodo ejecutar de ActualizarPaisFachadaImpl...");
 			daoFactory.iniciarTransaccion();
-
-			PaisDominio dominio = new PaisDominio.Builder()
+			var dominio = new PaisDominio.Builder()
 					.id(datos.getId())
 					.nombre(datos.getNombre())
 					.build();
 			casoUso.ejecutar(dominio);
-
 			daoFactory.confirmarTransaccion();
-
-		} catch (UcoParkingExcepcion exception) {
-
+			logger.debug("Sali del metodo ejecutar de ActualizarPaisFachadaImpl exitosamente.");
+		} catch (UcoParkingExcepcion excepcion) {
 			daoFactory.cancelarTransaccion();
-			throw exception;
-
-		} catch (Exception exception) {
-
+			logger.debug(excepcion.getMensajeTecnico(), excepcion.getExcepcionRaiz());
+			throw excepcion;
+		} catch (Exception excepcion) {
 			daoFactory.cancelarTransaccion();
-			throw new UcoParkingExcepcion();
-
+			var mensajeUsuario = "No fue posible actualizar el país. Por favor intente de nuevo.";
+			var mensajeTecnico = "Se presento un flujo no controlado dentro de la clase " + this.getClass().getName() + " en el metodo ejecutar.";
+			logger.debug(mensajeTecnico, excepcion);
+			throw UcoParkingExcepcion.crear(excepcion, mensajeUsuario, mensajeTecnico);
 		} finally {
-
 			daoFactory.cerrarConexion();
-
 		}
 	}
 
-
-
-	}
-
+}
